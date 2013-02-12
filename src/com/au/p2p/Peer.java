@@ -17,11 +17,12 @@ public class Peer {
 	private String address;
 	private int port;
 	private int capacity;
-	private XmlRpcClientConfigImpl clientConfig;
-	private XmlRpcClient client;
 	
 	public Peer(){
-		
+		this.name = "lol";
+		this.address = "lal";
+		this.port = 22;
+		this. capacity = 11;
 	}
 	
 	public Peer(String name, String address, int port, int capacity){
@@ -30,33 +31,31 @@ public class Peer {
 		this.port = port;
 		this. capacity = capacity;
 		
-//		setupServer();
-//		setupClient();
+		setupServer();
 	}
 	
 	public void ping(String address, int port){
-		//return "boo";
-		System.out.println("boo");
-//		try {
-//			clientConfig = new XmlRpcClientConfigImpl();
-//			clientConfig.setServerURL(new URL("http://" + address + ":" + port));
-//			clientConfig.setEnabledForExtensions(true);
-//			client = new XmlRpcClient();
-//			client.setConfig(clientConfig);
-//			
-//			Object[] params = new Object[]{new Integer(33), new Integer(9)};
-//		    Integer result = (Integer) client.execute("Peer.add", params);
-//		} 
-//		catch (MalformedURLException e) { e.printStackTrace();
-//		} 
-//		catch (XmlRpcException e) { e.printStackTrace();
-//		}
+		try {
+			XmlRpcClientConfigImpl clientConfig = new XmlRpcClientConfigImpl();
+			clientConfig.setServerURL(new URL("http://" + address + ":" + port));
+			clientConfig.setEnabledForExtensions(true);
+			XmlRpcClient client = new XmlRpcClient();
+			client.setConfig(clientConfig);
+			
+			Object[] params = new Object[]{new String("33"), new Integer(9)};
+		    PeerData result = (PeerData) client.execute("Peer.pong", params);
+		    System.out.println(result);
+		} 
+		catch (MalformedURLException e) { e.printStackTrace();
+		} 
+		catch (XmlRpcException e) { e.printStackTrace();
+		}
 	}
 	
-	public int add(int i1, int i2) {
-		return i1 + i2;
+	public PeerData pong(String address, int port){
+		return new PeerData(name, address, port, capacity);
 	}
-
+	
 	public void hello(String address, int port){
 		System.out.println("hello called" + address + port);
 	}
@@ -70,7 +69,7 @@ public class Peer {
 			//Setting the mapping to the classes up
 			PropertyHandlerMapping phm = new PropertyHandlerMapping();
 			phm.setVoidMethodEnabled(true);
-			phm.addHandler(Peer.class.getName(), this.getClass());
+			phm.addHandler("Peer", com.au.p2p.Peer.class);
 			xmlRpcServer.setHandlerMapping(phm);
 
 			//Configuring the server
@@ -86,12 +85,11 @@ public class Peer {
 		catch(IOException e){ e.printStackTrace();
 		}
 	}
-
-	private void setupClient(){
-		clientConfig = new XmlRpcClientConfigImpl();
-		clientConfig.setEnabledForExtensions(true);
-		client = new XmlRpcClient();
-		client.setConfig(clientConfig);
-
+	
+	public String getAddress(){
+		return address;
+	}
+	public int getPort(){
+		return port;
 	}
 }
