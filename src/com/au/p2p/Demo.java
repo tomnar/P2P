@@ -13,8 +13,8 @@ import org.apache.xmlrpc.webserver.WebServer;
 
 public class Demo {
 	public static void main(String [ ] args) throws XmlRpcException, IOException{
-		Peer p = new Peer("1", "127.0.0.1", 8095, 5);
-		Peer p2 = new Peer("1", "127.0.0.1", 8096, 5);
+		PeerImpl p = new PeerImpl("1", "127.0.0.1", 8095, 5);
+		PeerImpl p2 = new PeerImpl("1", "127.0.0.1", 8096, 5);
 		
 		p.ping(p2.getAddress(), p2.getPort());
 	}
